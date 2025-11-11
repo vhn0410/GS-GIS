@@ -1,0 +1,31 @@
+{
+    "name": "CH Xăng dầu 207 ( Hiện là CH của STS)",
+    "address_old": "56 đường 3 tháng 2, P. Hưng Lợi ( Gần vòng xoay Đầu sấu)",
+    "address_new": "56 đường 3 tháng 2, P. Tân An ( Gần vòng xoay Đầu sấu)",
+    "owner": "Cty TNHH MTV xăng dầu Bảo Bảo ( Hiện là CH STS)",
+    "supplier": "STS",
+    "station_type": " CH STS",
+    "nearest_petrolimex": {
+        "name": "Petrolimex cửa hàng số 10",
+        "distance_km": "0.4"
+    },
+    "estimated_sale": {
+        "total": 0,
+        "fuel": 0,
+        "oil": 0
+    },
+    "pumps_quantity": {
+        "fuel": 2,
+        "oil": 2
+    },
+    "facade_length": 30,
+    "dmn": ["PV OIL LUBE", "abc"],
+    "other_services": [
+        "Bãi rửa xe ô tô",
+        "Nhà thuốc"
+    ],
+    "status": 2,
+    "image": "test image",
+    "notes": "test note",
+    "coordinates": { "type": "Point", "coordinates": [10.014377641342394, 105.75818747210255] }
+}
