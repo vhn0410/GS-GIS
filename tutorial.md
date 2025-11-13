@@ -84,6 +84,8 @@ SELECT
     gs.facade_length,
     gs.status,
     gs.image,
+	gs.nearest_petrolimex_name,
+	gs.nearest_petrolimex_distance,
     gs.note AS notes,
     an.geometry,  
     COALESCE(s.fuel, 0) AS estimated_sale_fuel,
