@@ -45,6 +45,8 @@ public class GasStationService {
         gs.image = req.image;
         gs.note = req.notes;
         gs.address = address;
+        gs.nearest_petrolimex_name = req.nearest_petrolimex.name;
+        gs.nearest_petrolimex_distance = req.nearest_petrolimex.distance_km;
         gs.persist();
 
         // DMN

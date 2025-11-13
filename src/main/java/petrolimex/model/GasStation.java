@@ -35,6 +35,12 @@ public class GasStation extends PanacheEntityBase {
     
     @Column(name = "NOTE")
     public String note;
+    
+    @Column(name = "nearest_petrolimex_name")
+    public String nearest_petrolimex_name;
+
+    @Column(name = "nearest_petrolimex_distance")
+    public Double nearest_petrolimex_distance;
 
     // Quan hệ 1:1 với Address
     @OneToOne
