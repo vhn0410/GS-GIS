@@ -10,7 +10,7 @@ public class GasStation extends PanacheEntityBase {
     @Id
     @Column(name = "GAS_STATION_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Integer id;
+    public Long id;
 
     @Column(name = "STATION_NAME")
     public String stationName;

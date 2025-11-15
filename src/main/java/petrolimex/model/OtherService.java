@@ -18,7 +18,7 @@ public class OtherService extends PanacheEntityBase {
     @Id
     @Column(name = "SERVICE_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Integer id;
+    public Long id;
 
     @Column(name = "SERVICE_NAME")
     public String serviceName;

@@ -1,0 +1,97 @@
+version: "3.9"
+
+services:
+  geoserver-db:
+    image: postgis/postgis:16-3.4
+    container_name: geoserver-db
+    restart: always
+    environment:
+      POSTGRES_USER: geoserver
+      POSTGRES_PASSWORD: geoserver
+      POSTGRES_DB: geodata
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - geo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U geoserver -d geodata"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  geoserver:
+    image: docker.osgeo.org/geoserver:2.27.2
+    container_name: geoserver
+    restart: always
+    depends_on:
+      geoserver-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      # Skip demo data for a clean setup
+      SKIP_DEMO_DATA: "true"
+      # (optional) Set admin credentials
+      GEOSERVER_ADMIN_USER: admin
+      GEOSERVER_ADMIN_PASSWORD: geoserver
+      # Enable PostgreSQL JNDI connection (so GeoServer can find PostGIS easily)
+      POSTGRES_JNDI_ENABLED: "true"
+      POSTGRES_HOST: geoserver-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: geodata
+      POSTGRES_USERNAME: geoserver
+      POSTGRES_PASSWORD: geoserver
+      POSTGRES_JNDI_RESOURCE_NAME: "jdbc/postgres"
+      # Allow CORS (optional)
+      CORS_ENABLED: "true"
+    volumes:
+      # persistent GeoServer config/data
+      - ./geoserver_data:/opt/geoserver_data/
+    networks:
+      - geo-network
+
+  quarkus-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quarkus-postgis-app
+    restart: always
+    depends_on:
+      geoserver-db:
+        condition: service_healthy
+    ports:
+      - "9090:9090"
+    environment:
+      # Database connection
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://geoserver-db:5432/geodata
+      QUARKUS_DATASOURCE_USERNAME: geoserver
+      QUARKUS_DATASOURCE_PASSWORD: geoserver
+      # HTTP configuration
+      QUARKUS_HTTP_HOST: 0.0.0.0
+      QUARKUS_HTTP_PORT: 9090
+      # Hibernate
+      QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: update
+      QUARKUS_HIBERNATE_ORM_LOG_SQL: "true"
+      # OpenAPI
+      QUARKUS_SMALLRYE_OPENAPI_ENABLE: "true"
+      QUARKUS_SMALLRYE_OPENAPI_PATH: /openapi
+      QUARKUS_SWAGGER_UI_ALWAYS_INCLUDE: "true"
+      QUARKUS_SWAGGER_UI_PATH: /swagger-ui
+    networks:
+      - geo-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/q/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  geoserver_data:
+  pg_data:
+
+networks:
+  geo-network:
+    driver: bridge

@@ -17,7 +17,7 @@ public class Pump extends PanacheEntityBase {
     @Id
     @Column(name = "PUMP_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Integer id;
+    public Long id;
 
     @Column(name = "PUMP_NAME")
     public String pumpName;

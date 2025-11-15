@@ -12,7 +12,7 @@ public class Address extends PanacheEntityBase {
     @Id
     @Column(name = "ADDRESS_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Integer id;
+    public Long id;
 
     @Column(name = "OLD_ADDRESS")
     public String oldAddress;

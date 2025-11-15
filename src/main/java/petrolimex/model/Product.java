@@ -16,7 +16,7 @@ public class Product extends PanacheEntityBase {
     @Id
     @Column(name = "PRODUCT_ID")
     @GeneratedValue(strategy = GenerationType.AUTO) 
-    public Integer id;
+    public Long id;
 
     @Column(name = "PRODUCT_NAME")
     public String productName;
