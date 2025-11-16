@@ -1,0 +1,271 @@
+<featureType>
+  <id>FeatureTypeInfoImpl-7b622b1b:19a8d66b369:-7fe4</id>
+  <name>station_pois</name>
+  <nativeName>station_pois</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl-7b622b1b:19a8d66b369:-7fe6</id>
+  </namespace>
+  <title>Station POIs</title>
+  <keywords>
+    <string>features</string>
+    <string>station_pois</string>
+  </keywords>
+  <srs>EPSG:4326</srs>
+  <nativeBoundingBox>
+    <minx>0.0</minx>
+    <maxx>-1.0</maxx>
+    <miny>0.0</miny>
+    <maxy>-1.0</maxy>
+    <crs>EPSG:4326</crs>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>0.0</minx>
+    <maxx>-1.0</maxx>
+    <miny>0.0</miny>
+    <maxy>-1.0</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <advertised>true</advertised>
+  <metadata>
+    <entry key="JDBC_VIRTUAL_TABLE">
+      <virtualTable>
+        <name>station_pois</name>
+        <sql>
+SELECT 
+    gs.gas_station_id,
+    gs.station_name AS name,
+    a.old_address,
+    a.new_address,
+    gs.owner_name AS owner,
+    gs.supplier,
+    -- station_type as integer
+    CASE gs.station_type
+        WHEN &apos;Sở hữu&apos; THEN 0
+        WHEN &apos;Trực thuộc&apos; THEN 1
+        WHEN &apos;Đại lý&apos; THEN 2
+        WHEN &apos;Thương nhân nhận quyền&apos; THEN 3
+        WHEN &apos;Khác&apos; THEN 4
+    END AS station_type,
+    gs.facade_length,
+    gs.status,
+    gs.image,
+    gs.nearest_petrolimex_name,
+    gs.nearest_petrolimex_distance,
+    gs.note AS notes,
+    an.geometry,  
+    COALESCE(s.fuel, 0) AS estimated_sale_fuel,
+    COALESCE(s.oil, 0) AS estimated_sale_oil,
+    COALESCE(s.fuel, 0) + COALESCE(s.oil, 0) AS estimated_sale_total,
+    COALESCE(pq.fuel, 0) AS pumps_fuel,
+    COALESCE(pq.oil, 0) AS pumps_oil,
+    -- Chuyển từ array_agg sang string_agg để GeoServer nhận
+    COALESCE(dl.dmn, &apos;&apos;) AS dmn,
+    COALESCE(sl.other_services, &apos;&apos;) AS other_services
+FROM gas_station gs
+LEFT JOIN address a ON a.address_id = gs.address_id
+LEFT JOIN anchor an ON an.address_id = a.address_id
+LEFT JOIN (
+    SELECT
+        ho.gas_station_id,
+        SUM(CASE WHEN p.product_name = &apos;Fuel&apos; THEN ho.estimate_ouput ELSE 0 END) AS fuel,
+        SUM(CASE WHEN p.product_name = &apos;Oil&apos; THEN ho.estimate_ouput ELSE 0 END) AS oil
+    FROM has_output ho
+    JOIN product p ON p.product_id = ho.product_id
+    GROUP BY ho.gas_station_id
+) s ON s.gas_station_id = gs.gas_station_id
+LEFT JOIN (
+    SELECT
+        p.gas_station_id,
+        SUM(CASE WHEN pr.product_name = &apos;Fuel&apos; THEN 1 ELSE 0 END) AS fuel,
+        SUM(CASE WHEN pr.product_name = &apos;Oil&apos; THEN 1 ELSE 0 END) AS oil
+    FROM pump p
+    LEFT JOIN has_product hp ON hp.pump_id = p.pump_id
+    LEFT JOIN product pr ON pr.product_id = hp.product_id
+    GROUP BY p.gas_station_id
+) pq ON pq.gas_station_id = gs.gas_station_id
+-- dmn
+LEFT JOIN (
+    SELECT
+        d.gas_station_id,
+        string_agg(d.dmn_name, &apos;,&apos; ORDER BY d.dmn_name) AS dmn
+    FROM dmn d
+    GROUP BY d.gas_station_id
+) dl ON dl.gas_station_id = gs.gas_station_id
+-- other_services
+LEFT JOIN (
+    SELECT
+        os.gas_station_id,
+        string_agg(os.service_name, &apos;,&apos; ORDER BY os.service_name) AS other_services
+    FROM other_services os
+    GROUP BY os.gas_station_id
+) sl ON sl.gas_station_id = gs.gas_station_id
+WHERE an.geometry IS NOT NULL
+</sql>
+        <escapeSql>false</escapeSql>
+        <keyColumn>gas_station_id</keyColumn>
+        <geometry>
+          <name>geometry</name>
+          <type>Point</type>
+          <srid>4326</srid>
+        </geometry>
+      </virtualTable>
+    </entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl-7b622b1b:19a8d66b369:-7fe5</id>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <simpleConversionEnabled>false</simpleConversionEnabled>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <attributes>
+    <attribute>
+      <name>name</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>old_address</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>new_address</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>owner</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>supplier</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>station_type</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Integer</binding>
+    </attribute>
+    <attribute>
+      <name>facade_length</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Double</binding>
+    </attribute>
+    <attribute>
+      <name>status</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Integer</binding>
+    </attribute>
+    <attribute>
+      <name>image</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>nearest_petrolimex_name</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>nearest_petrolimex_distance</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Double</binding>
+    </attribute>
+    <attribute>
+      <name>notes</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>geometry</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>org.locationtech.jts.geom.Point</binding>
+    </attribute>
+    <attribute>
+      <name>estimated_sale_fuel</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Double</binding>
+    </attribute>
+    <attribute>
+      <name>estimated_sale_oil</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Double</binding>
+    </attribute>
+    <attribute>
+      <name>estimated_sale_total</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Double</binding>
+    </attribute>
+    <attribute>
+      <name>pumps_fuel</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Long</binding>
+    </attribute>
+    <attribute>
+      <name>pumps_oil</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Long</binding>
+    </attribute>
+    <attribute>
+      <name>dmn</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>other_services</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+  </attributes>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+  <encodeMeasures>false</encodeMeasures>
+</featureType>

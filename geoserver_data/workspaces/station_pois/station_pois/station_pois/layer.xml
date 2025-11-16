@@ -1,0 +1,16 @@
+<layer>
+  <name>station_pois</name>
+  <id>LayerInfoImpl-7b622b1b:19a8d66b369:-7fe3</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl-7b622b1b:19a8d66b369:-8000</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-7b622b1b:19a8d66b369:-7fe4</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2025-11-16 16:33:51.437 UTC</dateCreated>
+</layer>

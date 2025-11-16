@@ -1,0 +1,17 @@
+<dataStore>
+  <id>DataStoreInfoImpl-7b622b1b:19a8d66b369:-7fe5</id>
+  <name>station_pois</name>
+  <type>PostGIS (JNDI)</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl-7b622b1b:19a8d66b369:-7fe7</id>
+  </workspace>
+  <connectionParameters>
+    <entry key="jndiReferenceName">java:comp/env/jdbc/postgres</entry>
+    <entry key="dbtype">postgis</entry>
+    <entry key="namespace">http://localhost:8080/geoserver/station_pois</entry>
+  </connectionParameters>
+  <__default>false</__default>
+  <dateCreated>2025-11-16 16:33:51.186 UTC</dateCreated>
+  <disableOnConnFailure>false</disableOnConnFailure>
+</dataStore>

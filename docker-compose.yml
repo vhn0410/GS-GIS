@@ -51,6 +51,12 @@ services:
       - ./geoserver_data:/opt/geoserver_data/
     networks:
       - geo-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/geoserver/rest/about/version.json"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
   quarkus-app:
     build:
@@ -87,7 +93,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
+  
 volumes:
   geoserver_data:
   pg_data:

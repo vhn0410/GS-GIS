@@ -4,7 +4,7 @@
     "address_new": "56 đường 3 tháng 2, P. Tân An ( Gần vòng xoay Đầu sấu)",
     "owner": "Cty TNHH MTV xăng dầu Bảo Bảo ( Hiện là CH STS)",
     "supplier": "STS",
-    "station_type": " CH STS",
+    "station_type": 2,
     "nearest_petrolimex": {
         "name": "Petrolimex cửa hàng số 10",
         "distance_km": "0.4"

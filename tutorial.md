@@ -1,6 +1,3 @@
-
-
-
 # how to run geoserver
 1. Setting up database
 	In the geoserver init folder, run:
