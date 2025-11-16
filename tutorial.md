@@ -80,7 +80,14 @@ SELECT
     a.new_address,
     gs.owner_name AS owner,
     gs.supplier,
-    gs.station_type,
+    -- station_type as integer
+    CASE gs.station_type
+        WHEN 'Sở hữu' THEN 0
+        WHEN 'Trực thuộc' THEN 1
+        WHEN 'Đại lý' THEN 2
+        WHEN 'Thương nhân nhận quyền' THEN 3
+        WHEN 'Khác' THEN 4
+    END AS station_type,
     gs.facade_length,
     gs.status,
     gs.image,

@@ -14,7 +14,8 @@ public class GasStationRequest {
     public String address_new;                  // -> address
     public String owner;                        // -> gs
     public String supplier;                     // -> gs
-    public String station_type;                 // -> gs
+
+    public int station_type;                 // -> gs
     public NearestPetrolimex nearest_petrolimex;
     public EstimatedSale estimated_sale;
     public PumpsQuantity pumps_quantity;

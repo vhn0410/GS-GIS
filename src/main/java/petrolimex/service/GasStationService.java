@@ -9,6 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import petrolimex.config.OwnershipType;
 import petrolimex.dto.GasStationRequest;
 import petrolimex.dto.GasStationResponse;
 import petrolimex.model.Address;
@@ -39,7 +40,9 @@ public class GasStationService {
         res.name = gs.stationName;
         res.owner = gs.ownerName;
         res.supplier = gs.supplier;
+        
         res.station_type = gs.stationType;
+
         res.status = gs.status;
         res.facade_length = gs.facadeLength;
         res.image = gs.image;
@@ -140,7 +143,11 @@ public class GasStationService {
         GasStation gs = new GasStation();
         gs.stationName = req.name;
         gs.ownerName = req.owner;
-        gs.stationType = req.station_type;
+        // gs.stationType = req.station_type;
+        // Temp convert station_type int to String using OwnershipType enum, MUST fix later
+        OwnershipType type = OwnershipType.fromCode(req.station_type);
+        gs.stationType = type.getLabel();
+
         gs.supplier = req.supplier;
         gs.status = req.status;
         gs.facadeLength = req.facade_length;
@@ -263,7 +270,10 @@ public class GasStationService {
         // Update basic fields
         gs.stationName = req.name;
         gs.ownerName = req.owner;
-        gs.stationType = req.station_type;
+        // Temp convert station_type int to String using OwnershipType enum, MUST fix later
+        OwnershipType type = OwnershipType.fromCode(req.station_type);
+        gs.stationType = type.getLabel();
+
         gs.supplier = req.supplier;
         gs.status = req.status;
         gs.facadeLength = req.facade_length;
